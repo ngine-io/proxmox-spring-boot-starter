@@ -1,0 +1,2 @@
+io.ngine.proxmox.autoconfigure.ProxmoxAutoConfiguration
+io.ngine.proxmox.autoconfigure.ProxmoxHealthContributorAutoConfiguration
