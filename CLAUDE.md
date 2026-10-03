@@ -46,3 +46,7 @@ TLS: the preferred setup is `proxmox.ssl.bundle` (Spring SSL bundle with the PVE
 
 - Client tests bind `MockRestServiceServer` to a `RestClient.Builder` and pass that builder to `ProxmoxClient.builder().restClientBuilder(...)`. Path variables are URL-encoded, so UPIDs appear as `UPID%3Apve1%3A...` in expected URIs.
 - Auto-configuration tests use `ApplicationContextRunner`; the end-to-end test uses a JDK `HttpServer` because auto-configuration replaces the request factory, which would bypass a mock server.
+
+## Releasing
+
+Pushing a `v*` tag runs `.github/workflows/release.yml`. It sets the version from the tag (`v0.1.0` → `0.1.0`), then runs `./mvnw -P release deploy`, which signs with GPG and uploads to the Maven Central Portal. `autoPublish` is `false`, so each deployment waits in the Portal for a manual "Publish". The workflow expects the org secrets `CENTRAL_TOKEN_USERNAME`, `CENTRAL_TOKEN_PASSWORD`, `GPG_PRIVATE_KEY` and `GPG_PASSPHRASE`. The starter has no code, so its sources and javadoc jars are built from `src/main/placeholder`. The setup mirrors `ngine-io/cloudscalech-spring-boot-starter`.
