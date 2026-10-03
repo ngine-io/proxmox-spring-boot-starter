@@ -2,5 +2,13 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "description": "Maven 3.10 writes maven-metadata-local.xml into the Central bundle (central-publishing-maven-plugin 0.11.0), which Maven Central rejects",
+      "matchManagers": ["maven-wrapper"],
+      "matchPackageNames": ["org.apache.maven:apache-maven"],
+      "allowedVersions": "<3.10"
+    }
   ]
 }
