@@ -3,8 +3,8 @@ package io.ngine.proxmox.autoconfigure;
 import io.ngine.proxmox.client.ProxmoxClient;
 import io.ngine.proxmox.client.model.Version;
 
-import org.springframework.boot.actuate.health.AbstractHealthIndicator;
-import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.health.contributor.AbstractHealthIndicator;
+import org.springframework.boot.health.contributor.Health;
 
 /**
  * Reports Proxmox as up if {@code GET /version} succeeds.

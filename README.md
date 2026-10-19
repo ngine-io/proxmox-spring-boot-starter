@@ -4,11 +4,13 @@ Typed [Proxmox VE](https://pve.proxmox.com/pve-docs/api-viewer/) API client buil
 
 ## Usage
 
+Requires Spring Boot 4 (Jackson 3) and Java 21. For Spring Boot 3.5, use `0.1.x`.
+
 ```xml
 <dependency>
     <groupId>io.ngine.proxmox</groupId>
     <artifactId>proxmox-spring-boot-starter</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
 </dependency>
 ```
 

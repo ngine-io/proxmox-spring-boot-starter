@@ -2,7 +2,7 @@ package io.ngine.proxmox.autoconfigure;
 
 import io.ngine.proxmox.client.ProxmoxClient;
 
-import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
+import org.springframework.boot.health.autoconfigure.contributor.ConditionalOnEnabledHealthIndicator;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
  */
 @AutoConfiguration(after = ProxmoxAutoConfiguration.class)
 @ConditionalOnClass(name = { "io.ngine.proxmox.client.ProxmoxClient",
-        "org.springframework.boot.actuate.health.HealthIndicator" })
+        "org.springframework.boot.health.contributor.HealthIndicator" })
 @ConditionalOnBean(ProxmoxClient.class)
 @ConditionalOnEnabledHealthIndicator("proxmox")
 public class ProxmoxHealthContributorAutoConfiguration {
