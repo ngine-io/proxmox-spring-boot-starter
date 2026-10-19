@@ -8,6 +8,7 @@ import io.ngine.proxmox.client.model.ClusterResource;
 import io.ngine.proxmox.client.model.ClusterResourceType;
 import io.ngine.proxmox.client.model.GuestConfig;
 import io.ngine.proxmox.client.model.GuestStatus;
+import io.ngine.proxmox.client.model.NetworkInterface;
 import io.ngine.proxmox.client.model.Node;
 import io.ngine.proxmox.client.model.StorageInfo;
 import io.ngine.proxmox.client.model.TaskStatus;
@@ -209,6 +210,35 @@ class ProxmoxClientTests {
         });
         assertThat(this.client.storage("pve1").content("local", "iso")).singleElement()
             .satisfies(content -> assertThat(content.volid()).isEqualTo("local:iso/debian.iso"));
+    }
+
+    @Test
+    void readsNodeNetworkInterfaces() {
+        this.server.expect(requestTo(API + "/nodes/pve1/network"))
+            .andRespond(json("""
+                    {"data":[{"iface":"vmbr0","type":"bridge","active":1,"autostart":1,"bridge_ports":"eno1","cidr":"10.0.0.2/24","comments":"LAN"},
+                             {"iface":"eno1","type":"eth","active":1}]}
+                    """));
+        this.server.expect(requestTo(API + "/nodes/pve1/network?type=any_bridge"))
+            .andRespond(json("""
+                    {"data":[{"iface":"vmbr1","type":"OVSBridge","active":0}]}
+                    """));
+
+        List<NetworkInterface> all = this.client.nodes().network("pve1");
+        List<NetworkInterface> bridges = this.client.nodes().network("pve1", "any_bridge");
+
+        assertThat(all).hasSize(2).first().satisfies(iface -> {
+            assertThat(iface.iface()).isEqualTo("vmbr0");
+            assertThat(iface.isBridge()).isTrue();
+            assertThat(iface.active()).isTrue();
+            assertThat(iface.bridgePorts()).isEqualTo("eno1");
+            assertThat(iface.cidr()).isEqualTo("10.0.0.2/24");
+        });
+        assertThat(all.get(1).isBridge()).isFalse();
+        assertThat(bridges).singleElement().satisfies(iface -> {
+            assertThat(iface.isBridge()).isTrue();
+            assertThat(iface.active()).isFalse();
+        });
     }
 
     @Test
