@@ -12,10 +12,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.ssl.SslAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.client.RestClientAutoConfiguration;
+import org.springframework.boot.restclient.autoconfigure.RestClientAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.http.client.ClientHttpRequestFactoryBuilder;
-import org.springframework.boot.http.client.ClientHttpRequestFactorySettings;
+import org.springframework.boot.http.client.HttpClientSettings;
 import org.springframework.boot.ssl.SslBundles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -80,7 +80,7 @@ public class ProxmoxAutoConfiguration {
             factory.setReadTimeout(properties.getReadTimeout());
             return factory;
         }
-        ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.defaults()
+        HttpClientSettings settings = HttpClientSettings.defaults()
             .withTimeouts(properties.getConnectTimeout(), properties.getReadTimeout());
         String bundle = properties.getSsl().getBundle();
         if (StringUtils.hasText(bundle)) {

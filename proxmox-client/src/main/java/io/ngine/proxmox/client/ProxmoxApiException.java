@@ -5,8 +5,9 @@ import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatusCode;
@@ -22,7 +23,7 @@ import org.springframework.util.StringUtils;
  */
 public class ProxmoxApiException extends ProxmoxException {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final JsonMapper MAPPER = new JsonMapper();
 
     private final HttpStatusCode statusCode;
 
@@ -65,11 +66,11 @@ public class ProxmoxApiException extends ProxmoxException {
         Map<String, String> errors = new LinkedHashMap<>();
         JsonNode body = readBody(response);
         if (body != null) {
-            if (StringUtils.hasText(body.path("message").asText(null))) {
-                reason = body.path("message").asText().strip();
+            if (StringUtils.hasText(body.path("message").asString(null))) {
+                reason = body.path("message").asString().strip();
             }
             body.path("errors").properties()
-                    .forEach(entry -> errors.put(entry.getKey(), entry.getValue().asText().strip()));
+                    .forEach(entry -> errors.put(entry.getKey(), entry.getValue().asString().strip()));
         }
         StringBuilder message = new StringBuilder()
                 .append(request.getMethod()).append(' ').append(request.getURI().getPath())
@@ -88,7 +89,7 @@ public class ProxmoxApiException extends ProxmoxException {
             byte[] bytes = body.readAllBytes();
             return bytes.length > 0 ? MAPPER.readTree(bytes) : null;
         }
-        catch (IOException ex) {
+        catch (IOException | JacksonException ex) {
             return null;
         }
     }

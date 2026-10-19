@@ -1,7 +1,7 @@
 package io.ngine.proxmox.client.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * Entry of {@code GET /nodes/{node}/qemu} and {@code GET /nodes/{node}/lxc}.
